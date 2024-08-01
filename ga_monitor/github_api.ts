@@ -1,8 +1,8 @@
 const API_ENDPOINT =
   "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_ID/runs";
 
-async function getWorkflowDurationAvg(date: string, workflowID: string) {
-  const workflowRuns = await fetchWorkflows(date, workflowID);
+async function getWorkflowRunDurationAvg(workflowID: string, date: Date) {
+  const workflowRuns = await fetchWorkflowRuns(workflowID, date);
 
   const numOfRuns = workflowRuns.length;
   let durationSum = 0;
@@ -18,19 +18,14 @@ async function getWorkflowDurationAvg(date: string, workflowID: string) {
   return durationAvg;
 }
 
-/**
- * @param date "YYYY-MM-DD"
- * @param workflowID
- * @returns
- */
-async function fetchWorkflows(workflowID: string, date: string) {
+async function fetchWorkflowRuns(workflowID: string, date: Date) {
   const properties = PropertiesService.getScriptProperties();
   const ghToken = properties.getProperty("GITHUB_TOKEN");
 
   const url = new URL(API_ENDPOINT.replace("WORKFLOW_ID", workflowID));
   url.searchParams.append("branch", "dev");
   url.searchParams.append("status", "success");
-  url.searchParams.append("created", `>=${date}`);
+  url.searchParams.append("created", `>=${getFormattedDate(date)}`);
 
   const response = await fetch(url.toString(), {
     method: "GET",
@@ -51,7 +46,7 @@ async function fetchWorkflows(workflowID: string, date: string) {
 }
 
 /**
- * @see https://github.com/googleworkspace/apps-script-samples/blob/main/sheets/removingDuplicates/removingDuplicates.gs
+ * @see https://docs.github.com/ja/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-workflow
  */
 interface WorkflowRun {
   created_at: string;

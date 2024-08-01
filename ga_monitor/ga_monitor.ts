@@ -1,9 +1,7 @@
 // entry point
 function gaMonitor() {
   const sheet = SpreadsheetApp.getActiveSheet();
-
-  const today = getFormattedTodayDate();
-  const durationAvg = getWorkflowDurationAvg(today, "1");
+  const durationAvg = getWorkflowRunDurationAvg("1", new Date());
 
   // logWorkflowDuration(today, durationAvg);
 }
