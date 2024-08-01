@@ -1,7 +1,12 @@
 // entry point
-function gaMonitor() {
-  const sheet = SpreadsheetApp.getActiveSheet();
-  const durationAvg = getWorkflowRunDurationAvg("1", new Date());
+async function gaMonitor() {
+  const today = new Date();
+  const avgDuration = await getWorkflowRunAvgDuration("1", new Date());
+  const avgDurationLastTime = readLastAvgDurationLog().avgDuration;
 
-  // logWorkflowDuration(today, durationAvg);
+  writeAvgDurationLog({
+    date: today,
+    avgDuration: avgDuration,
+    avgDurationDelta: avgDuration - avgDurationLastTime / avgDurationLastTime,
+  });
 }

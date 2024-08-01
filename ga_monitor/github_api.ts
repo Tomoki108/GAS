@@ -1,7 +1,7 @@
 const API_ENDPOINT =
   "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_ID/runs";
 
-async function getWorkflowRunDurationAvg(workflowID: string, date: Date) {
+async function getWorkflowRunAvgDuration(workflowID: string, date: Date) {
   const workflowRuns = await fetchWorkflowRuns(workflowID, date);
 
   const numOfRuns = workflowRuns.length;
@@ -13,9 +13,9 @@ async function getWorkflowRunDurationAvg(workflowID: string, date: Date) {
     const duration = updatedAt.getTime() - createdAt.getTime();
     durationSum += duration;
   });
-  const durationAvg = durationSum / numOfRuns;
+  const avgDuration = durationSum / numOfRuns;
 
-  return durationAvg;
+  return avgDuration;
 }
 
 async function fetchWorkflowRuns(workflowID: string, date: Date) {
