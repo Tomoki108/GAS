@@ -24,6 +24,11 @@ interface SheetResoisitory {
    * 平均実行時間ログを書き込む
    */
   writeAvgDurationLog(log: AvgDurationLog): void;
+
+  /**
+   * 平均実行時間ログの折れ線グラフを更新する
+   */
+  updateAvgDurationLogLineChart(): void;
 }
 
 class SheetResoisitoryImpl implements SheetResoisitory {
@@ -57,5 +62,44 @@ class SheetResoisitoryImpl implements SheetResoisitory {
       3
     );
     rangeToWrite.setValue([log.date, log.avgDuration, log.avgDurationDelta]);
+  }
+
+  updateAvgDurationLogLineChart(): void {
+    // 既存のチャートを削除
+    var charts = this.sheet.getCharts();
+    for (var i = 0; i < charts.length; i++) {
+      this.sheet.removeChart(charts[i]);
+    }
+
+    // 直近30日のログをグラフのデータ範囲として指定
+    var dataRange: GoogleAppsScript.Spreadsheet.Range;
+    const lastRow = this.sheet.getLastRow();
+    if (lastRow < 30) {
+      dataRange = this.sheet.getRange(
+        1,
+        DATE_COLUMN,
+        lastRow,
+        DURATION_DELTA_COLUMN
+      );
+    } else {
+      dataRange = this.sheet.getRange(
+        lastRow - 30,
+        DATE_COLUMN,
+        lastRow,
+        DURATION_DELTA_COLUMN
+      );
+    }
+
+    // 新しいチャートを作成
+    var chart = this.sheet
+      .newChart()
+      .setChartType(Charts.ChartType.LINE)
+      .addRange(dataRange)
+      .setPosition(5, 5, 0, 0)
+      .setOption("title", "Updated Line Chart")
+      .build();
+
+    // シートにチャートを挿入
+    this.sheet.insertChart(chart);
   }
 }
