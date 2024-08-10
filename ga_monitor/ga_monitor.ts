@@ -1,24 +1,28 @@
+const workflowFiles = ["publish_preview.yml"];
+
 // entry point
 async function gaMonitor() {
-  // 今日のworkflowの平均実行時間を取得
   const today = new Date();
-  const avgDuration = await getWorkflowRunAvgDuration("1", today);
 
-  const seetRepository = new SheetResoisitoryImpl(
-    SpreadsheetApp.getActiveSheet()
-  );
+  workflowFiles.forEach(async (workflowFile) => {
+    const avgDuration = await getWorkflowRunAvgDuration(workflowFile, today);
 
-  // シートから前回実行時のworkflowの平均実行時間を取得
-  const avgDurationLastTime =
-    seetRepository.readLastAvgDurationLog().avgDuration;
+    const seetRepository = new SheetResoisitoryImpl(
+      SpreadsheetApp.getActiveSheet()
+    );
 
-  // 今日のworkflowの平均実行時間をログに書き込む
-  seetRepository.writeAvgDurationLog({
-    date: today,
-    avgDuration: avgDuration,
-    avgDurationDelta: avgDuration - avgDurationLastTime / avgDurationLastTime,
+    // シートから前回実行時のworkflowの平均実行時間を取得
+    const avgDurationLastTime =
+      seetRepository.readLastAvgDurationLog().avgDuration;
+
+    // 今日のworkflowの平均実行時間をログに書き込む
+    seetRepository.writeAvgDurationLog({
+      date: today,
+      avgDuration: avgDuration,
+      avgDurationDelta: avgDuration - avgDurationLastTime / avgDurationLastTime,
+    });
+
+    // 平均実行時間ログの折れ線グラフを更新
+    seetRepository.updateAvgDurationLogLineChart();
   });
-
-  // 平均実行時間ログの折れ線グラフを更新
-  seetRepository.updateAvgDurationLogLineChart();
 }
