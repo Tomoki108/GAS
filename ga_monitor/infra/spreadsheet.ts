@@ -11,7 +11,8 @@ class SheetResoisitoryImpl implements SheetResoisitory {
 
   readLastAvgDurationLog(): AvgDurationLog | null {
     const lastRow = this.sheet.getLastRow();
-    if (lastRow === 0) {
+    // ヘッダー行のみの場合、ログが存在しないのでnullを返す
+    if (lastRow === 1) {
       return null;
     }
 
@@ -36,7 +37,9 @@ class SheetResoisitoryImpl implements SheetResoisitory {
       1,
       3
     );
-    rangeToWrite.setValue([log.date, log.avgDuration, log.avgDurationDelta]);
+    rangeToWrite.setValues([
+      [log.date, log.avgDuration.toString(), log.avgDurationDelta.toString()],
+    ]);
   }
 
   updateAvgDurationLogLineChart(): void {
