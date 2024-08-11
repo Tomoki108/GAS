@@ -1,8 +1,8 @@
 const API_ENDPOINT =
-  "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_ID/runs";
+  "https://api.github.com/repos/OWNER/REPO/actions/workflows/{WORKFLOW_FILE}/runs";
 
-async function getWorkflowRunAvgDuration(workflowID: string, date: Date) {
-  const workflowRuns = await fetchWorkflowRuns(workflowID, date);
+async function getWorkflowRunAvgDuration(workflowFile: string, date: Date) {
+  const workflowRuns = await fetchWorkflowRuns(workflowFile, date);
 
   const numOfRuns = workflowRuns.length;
   let durationSum = 0;
@@ -18,11 +18,11 @@ async function getWorkflowRunAvgDuration(workflowID: string, date: Date) {
   return avgDuration;
 }
 
-async function fetchWorkflowRuns(workflowID: string, date: Date) {
+async function fetchWorkflowRuns(workflowFile: string, date: Date) {
   const properties = PropertiesService.getScriptProperties();
   const ghToken = properties.getProperty("GITHUB_TOKEN");
 
-  const url = new URL(API_ENDPOINT.replace("WORKFLOW_ID", workflowID));
+  const url = new URL(API_ENDPOINT.replace("{WORKFLOW_FILE}", workflowFile));
   url.searchParams.append("branch", "dev");
   url.searchParams.append("status", "success");
   url.searchParams.append("created", `>=${getFormattedDate(date)}`);
