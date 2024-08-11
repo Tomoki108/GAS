@@ -1,8 +1,17 @@
 const API_ENDPOINT =
-  "https://api.github.com/repos/OWNER/REPO/actions/workflows/{WORKFLOW_FILE}/runs";
+  "https://api.github.com/repos/{OWNER}/{REPO}/actions/workflows/{WORKFLOW_FILE}/runs";
 
-const GH_TOKEN =
-  PropertiesService.getScriptProperties().getProperty("GITHUB_TOKEN");
+const GH_TOKEN = PropertiesService.getScriptProperties().getProperty(
+  "GITHUB_TOKEN"
+) as string;
+
+const REPO_OWNER = PropertiesService.getScriptProperties().getProperty(
+  "REPOSITORY_OWNER"
+) as string;
+
+const REPO = PropertiesService.getScriptProperties().getProperty(
+  "REPOSITORY"
+) as string;
 
 class GithubAPIImpl implements GithubAPI {
   getWorkflowRunAvgDuration(workflowFile: string, date: Date): number {
@@ -23,10 +32,13 @@ class GithubAPIImpl implements GithubAPI {
 
   fetchWorkflowRuns(workflowFile: string, date: Date) {
     // GASではURLオブジェクトを使えないので、純粋な文字列としてURLを構築
-    var url = API_ENDPOINT.replace("{WORKFLOW_FILE}", workflowFile);
-    url += "?branch=dev";
+    var url = API_ENDPOINT.replace("{OWNER}", REPO_OWNER)
+      .replace("{REPO}", REPO)
+      .replace("{WORKFLOW_FILE}", workflowFile);
+    url += "?branch=main"; // TODO: branchは変数で管理する。
     url += "&status=success";
-    url += `&created>=${getFormattedDate(date)}`;
+    url += `&created=>=${getFormattedDate(date)}`;
+    url = encodeURI(url);
 
     const response = UrlFetchApp.fetch(url, {
       headers: {

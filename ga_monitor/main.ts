@@ -15,16 +15,17 @@ function main() {
     );
   }
 
-  console.log("hello");
-
   const today = new Date();
   workflowFiles.forEach(async (workflowFile) => {
     // GitHubから、指定したworkflowの実行時間の平均を取得
     const githubAPI = newGithubAPI();
-    const avgDuration = await githubAPI.getWorkflowRunAvgDuration(
+
+    const avgDuration = githubAPI.getWorkflowRunAvgDuration(
       workflowFile,
       today
     );
+
+    console.log("avg duration: " + avgDuration);
 
     // スプレッドシートにログを書き込み
     const sheet = spreadsheet.getSheetByName(
