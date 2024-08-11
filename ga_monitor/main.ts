@@ -24,8 +24,6 @@ function main() {
       today
     );
 
-    console.log("avg duration: " + avgDuration);
-
     const sheet = spreadsheet.getSheetByName(
       workflowFile
     ) as GoogleAppsScript.Spreadsheet.Sheet;
@@ -34,14 +32,17 @@ function main() {
     // spread sheetから直近のログを読み取り、平均実行時間の変化率を計算
     const mostRecentLog = seetRepository.readLastAvgDurationLog();
     const avgDurationDelta = mostRecentLog
-      ? avgDuration - mostRecentLog.avgDuration / mostRecentLog.avgDuration
+      ? (avgDuration - mostRecentLog.avgDuration) / mostRecentLog.avgDuration
       : 0;
 
-    seetRepository.writeAvgDurationLog({
+    const log = {
       date: today,
       avgDuration: avgDuration,
       avgDurationDelta: avgDurationDelta,
-    });
+    };
+    console.log(workflowFile + " log: " + JSON.stringify(log));
+
+    seetRepository.writeAvgDurationLog(log);
 
     seetRepository.updateAvgDurationLogLineChart();
   });

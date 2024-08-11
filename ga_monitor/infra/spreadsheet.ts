@@ -19,10 +19,6 @@ class SheetResoisitoryImpl implements SheetResoisitory {
     const rangeToRead = this.sheet.getRange(lastRow, DATE_COLUMN, 1, 3);
     const [date, avgDuration, avgDurationDelta] = rangeToRead.getValues()[0];
 
-    console.log("date: " + date);
-    console.log("avgDuration: " + avgDuration);
-    console.log("avgDurationDelta: " + avgDurationDelta);
-
     return {
       date: date,
       avgDuration: avgDuration,
