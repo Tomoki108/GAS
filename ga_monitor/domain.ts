@@ -11,9 +11,9 @@ type AvgDurationLog = {
 
 interface SheetResoisitory {
   /**
-   * 最新の平均実行時間ログを取得する
+   * 直近の平均実行時間ログを取得する
    */
-  readLastAvgDurationLog(): AvgDurationLog;
+  readLastAvgDurationLog(): AvgDurationLog | null;
 
   /**
    * 平均実行時間ログを書き込む

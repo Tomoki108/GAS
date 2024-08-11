@@ -9,14 +9,18 @@ class SheetResoisitoryImpl implements SheetResoisitory {
     this.sheet = sheet;
   }
 
-  readLastAvgDurationLog(): AvgDurationLog {
-    const rangeToRead = this.sheet.getRange(
-      this.sheet.getLastRow(),
-      DATE_COLUMN,
-      1,
-      3
-    );
+  readLastAvgDurationLog(): AvgDurationLog | null {
+    const lastRow = this.sheet.getLastRow();
+    if (lastRow === 0) {
+      return null;
+    }
+
+    const rangeToRead = this.sheet.getRange(lastRow, DATE_COLUMN, 1, 3);
     const [date, avgDuration, avgDurationDelta] = rangeToRead.getValues()[0];
+
+    console.log("date: " + date);
+    console.log("avgDuration: " + avgDuration);
+    console.log("avgDurationDelta: " + avgDurationDelta);
 
     return {
       date: date,
