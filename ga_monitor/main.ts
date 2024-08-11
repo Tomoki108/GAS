@@ -1,7 +1,7 @@
 const workflowFiles = ["publish_preview.yml"];
 
 // メインの処理のentry point
-async function main() {
+function main() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
   // シート名のvalidate
@@ -14,6 +14,8 @@ async function main() {
       "シート名のリストが、workflowファイル名のリストと一致しません"
     );
   }
+
+  console.log("hello");
 
   const today = new Date();
   workflowFiles.forEach(async (workflowFile) => {

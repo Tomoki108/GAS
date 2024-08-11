@@ -40,7 +40,7 @@ interface GithubAPI {
   /**
    * 指定したworkflowの実行時間の平均を取得する
    */
-  getWorkflowRunAvgDuration(workflowFile: string, date: Date): Promise<number>;
+  getWorkflowRunAvgDuration(workflowFile: string, date: Date): number;
 }
 
 function newGithubAPI(): GithubAPI {

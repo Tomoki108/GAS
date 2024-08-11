@@ -5,14 +5,13 @@ const GH_TOKEN =
   PropertiesService.getScriptProperties().getProperty("GITHUB_TOKEN");
 
 class GithubAPIImpl implements GithubAPI {
-  async getWorkflowRunAvgDuration(
-    workflowFile: string,
-    date: Date
-  ): Promise<number> {
-    const workflowRuns = await this.fetchWorkflowRuns(workflowFile, date);
+  getWorkflowRunAvgDuration(workflowFile: string, date: Date): number {
+    const workflowRuns = this.fetchWorkflowRuns(workflowFile, date);
 
     const numOfRuns = workflowRuns.length;
     let durationSum = 0;
+
+    console.log(numOfRuns);
 
     workflowRuns.forEach((run) => {
       const createdAt = new Date(run.created_at);
@@ -25,14 +24,13 @@ class GithubAPIImpl implements GithubAPI {
     return avgDuration;
   }
 
-  async fetchWorkflowRuns(workflowFile: string, date: Date) {
+  fetchWorkflowRuns(workflowFile: string, date: Date) {
     const url = new URL(API_ENDPOINT.replace("{WORKFLOW_FILE}", workflowFile));
     url.searchParams.append("branch", "dev");
     url.searchParams.append("status", "success");
     url.searchParams.append("created", `>=${getFormattedDate(date)}`);
 
-    const response = await fetch(url.toString(), {
-      method: "GET",
+    const response = UrlFetchApp.fetch(url.toString(), {
       headers: {
         Authorization: `Bearer ${GH_TOKEN}`,
         Accept: "application/vnd.github+json",
@@ -40,13 +38,15 @@ class GithubAPIImpl implements GithubAPI {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`APIリクエストが失敗しました: ${response.status}`);
+    if (response.getResponseCode() !== 200) {
+      throw new Error(
+        `APIリクエストが失敗しました: ${response.getResponseCode}`
+      );
     }
 
-    const data = await response.json();
+    const data = response.getContentText();
 
-    return data.workflow_runs as Array<WorkflowRun>;
+    return JSON.parse(data) as WorkflowRun[];
   }
 }
 
