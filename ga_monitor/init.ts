@@ -15,6 +15,6 @@ function init() {
     const sheet = spreadsheet.getSheetByName(
       sheetName
     ) as GoogleAppsScript.Spreadsheet.Sheet;
-    sheet.appendRow(["Date", "Avetage Duration (Sec)", "Delta (%)"]);
+    sheet.appendRow(["Date", "Average Duration (Sec)", "Delta (%)"]);
   });
 }
