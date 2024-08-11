@@ -1,7 +1,7 @@
 const workflowFiles = ["publish_preview.yml"];
 
 // entry point
-async function gaMonitor() {
+async function main() {
   const today = new Date();
 
   workflowFiles.forEach(async (workflowFile) => {
