@@ -5,6 +5,10 @@ type AvgDurationLog = {
   avgDurationDelta: number; // 前日比（%）
 };
 
+//////////////////
+// spread_sheet
+//////////////////
+
 interface SheetResoisitory {
   /**
    * 最新の平均実行時間ログを取得する
@@ -26,4 +30,19 @@ function newSheetRepository(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): SheetResoisitory {
   return new SheetResoisitoryImpl(sheet);
+}
+
+//////////////////
+// github
+//////////////////
+
+interface GithubAPI {
+  /**
+   * 指定したworkflowの実行時間の平均を取得する
+   */
+  getWorkflowRunAvgDuration(workflowFile: string, date: Date): Promise<number>;
+}
+
+function newGithubAPI(): GithubAPI {
+  return new GithubAPIImpl();
 }
