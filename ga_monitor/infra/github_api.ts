@@ -15,17 +15,16 @@ const REPO = PropertiesService.getScriptProperties().getProperty(
 
 class GithubAPIImpl implements GithubAPI {
   getWorkflowRunAvgDuration(workflowFile: string, date: Date): number {
-    const workflowRuns = this.fetchWorkflowRuns(workflowFile, date);
-    const numOfRuns = workflowRuns.length;
+    const response = this.fetchWorkflowRuns(workflowFile, date);
     let durationSum = 0;
 
-    workflowRuns.forEach((run) => {
+    response.workflow_runs.forEach((run) => {
       const createdAt = new Date(run.created_at);
       const updatedAt = new Date(run.updated_at);
       const duration = updatedAt.getTime() - createdAt.getTime();
       durationSum += duration;
     });
-    const avgDuration = durationSum / numOfRuns;
+    const avgDuration = durationSum / response.total_count;
 
     return avgDuration;
   }
@@ -56,13 +55,18 @@ class GithubAPIImpl implements GithubAPI {
 
     const data = response.getContentText();
 
-    return JSON.parse(data) as WorkflowRun[];
+    return JSON.parse(data) as WorkflowRunResponse;
   }
 }
 
 /**
  * @see https://docs.github.com/ja/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-workflow
  */
+interface WorkflowRunResponse {
+  total_count: number;
+  workflow_runs: WorkflowRun[];
+}
+
 interface WorkflowRun {
   created_at: string;
   updated_at: string;
