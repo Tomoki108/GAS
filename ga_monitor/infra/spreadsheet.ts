@@ -2,35 +2,6 @@ const DATE_COLUMN = 1;
 const DURATION_COLUMN = 2;
 const DURATION_DELTA_COLUMN = 3;
 
-// const sheet = SpreadsheetApp.getActiveSheet();
-
-// 平均実行時間ログ
-type AvgDurationLog = {
-  date: Date;
-  avgDuration: number; // 平均実行時間（秒）
-  avgDurationDelta: number; // 前日比（%）
-};
-
-/**
- * スプレッドシートの操作を行うインターフェース
- */
-interface SheetResoisitory {
-  /**
-   * 最新の平均実行時間ログを取得する
-   */
-  readLastAvgDurationLog(): AvgDurationLog;
-
-  /**
-   * 平均実行時間ログを書き込む
-   */
-  writeAvgDurationLog(log: AvgDurationLog): void;
-
-  /**
-   * 平均実行時間ログの折れ線グラフを更新する
-   */
-  updateAvgDurationLogLineChart(): void;
-}
-
 class SheetResoisitoryImpl implements SheetResoisitory {
   private sheet: GoogleAppsScript.Spreadsheet.Sheet;
 
