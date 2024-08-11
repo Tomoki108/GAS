@@ -43,7 +43,12 @@ function main() {
     console.log(workflowFile + " log: " + JSON.stringify(log));
 
     seetRepository.writeAvgDurationLog(log);
-
     seetRepository.updateAvgDurationLogLineChart();
+
+    // 平均実行時間の変化率が閾値以上の場合、Slackにアラートを送信
+    if (avgDurationDelta > 0.001) {
+      const slackAPI = newSlackAPI();
+      slackAPI.sendAlert(workflowFile, avgDurationDelta);
+    }
   });
 }

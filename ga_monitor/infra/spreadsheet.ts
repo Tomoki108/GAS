@@ -1,3 +1,6 @@
+const SPREAD_SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/1a3W7uBSL1yKNTyu4YkkUkqxCnbrvbaJTC7Sr1Y8GbG8";
+
 const DATE_COLUMN = 1;
 const DURATION_COLUMN = 2;
 const DURATION_DELTA_COLUMN = 3;

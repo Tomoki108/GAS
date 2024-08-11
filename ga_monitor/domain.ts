@@ -33,7 +33,7 @@ function newSheetRepository(
 }
 
 //////////////////
-// github
+// Github
 //////////////////
 
 interface GithubAPI {
@@ -46,3 +46,20 @@ interface GithubAPI {
 function newGithubAPI(): GithubAPI {
   return new GithubAPIImpl();
 }
+
+//////////////////
+// Slack
+//////////////////
+interface SlackAPI {
+  /**
+   * メッセージを送信する
+   */
+  sendAlert(workflowName: string, avgDurationDelta: number): void;
+}
+
+function newSlackAPI(): SlackAPI {
+  return new SlackAPIImpl();
+}
+
+const alertMesssae =
+  "{WORKFLOW_NAME}の実行時間が前日比で{DELTA}%増加しました。予期せぬ変更を加えていないか適宜ソースコードを確認してください。 {MONITOR_LINK}";
