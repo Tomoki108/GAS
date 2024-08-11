@@ -7,11 +7,8 @@ const GH_TOKEN =
 class GithubAPIImpl implements GithubAPI {
   getWorkflowRunAvgDuration(workflowFile: string, date: Date): number {
     const workflowRuns = this.fetchWorkflowRuns(workflowFile, date);
-
     const numOfRuns = workflowRuns.length;
     let durationSum = 0;
-
-    console.log(numOfRuns);
 
     workflowRuns.forEach((run) => {
       const createdAt = new Date(run.created_at);
@@ -25,12 +22,13 @@ class GithubAPIImpl implements GithubAPI {
   }
 
   fetchWorkflowRuns(workflowFile: string, date: Date) {
-    const url = new URL(API_ENDPOINT.replace("{WORKFLOW_FILE}", workflowFile));
-    url.searchParams.append("branch", "dev");
-    url.searchParams.append("status", "success");
-    url.searchParams.append("created", `>=${getFormattedDate(date)}`);
+    // GASではURLオブジェクトを使えないので、純粋な文字列としてURLを構築
+    var url = API_ENDPOINT.replace("{WORKFLOW_FILE}", workflowFile);
+    url += "?branch=dev";
+    url += "&status=success";
+    url += `&created>=${getFormattedDate(date)}`;
 
-    const response = UrlFetchApp.fetch(url.toString(), {
+    const response = UrlFetchApp.fetch(url, {
       headers: {
         Authorization: `Bearer ${GH_TOKEN}`,
         Accept: "application/vnd.github+json",
