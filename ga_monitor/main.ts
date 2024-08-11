@@ -17,9 +17,8 @@ function main() {
 
   const today = new Date();
   workflowFiles.forEach(async (workflowFile) => {
-    // GitHubから、指定したworkflowの実行時間の平均を取得
+    // GitHubから、指定したworkflowの平均実行時間を取得
     const githubAPI = newGithubAPI();
-
     const avgDuration = githubAPI.getWorkflowRunAvgDuration(
       workflowFile,
       today
@@ -27,19 +26,21 @@ function main() {
 
     console.log("avg duration: " + avgDuration);
 
-    // スプレッドシートにログを書き込み
     const sheet = spreadsheet.getSheetByName(
       workflowFile
     ) as GoogleAppsScript.Spreadsheet.Sheet;
     const seetRepository = newSheetRepository(sheet);
 
-    const avgDurationLastTime =
-      seetRepository.readLastAvgDurationLog().avgDuration;
+    // spread sheetから直近のログを読み取り、平均実行時間の変化率を計算
+    const mostRecentLog = seetRepository.readLastAvgDurationLog();
+    const avgDurationDelta = mostRecentLog
+      ? avgDuration - mostRecentLog.avgDuration / mostRecentLog.avgDuration
+      : 0;
 
     seetRepository.writeAvgDurationLog({
       date: today,
       avgDuration: avgDuration,
-      avgDurationDelta: avgDuration - avgDurationLastTime / avgDurationLastTime,
+      avgDurationDelta: avgDurationDelta,
     });
 
     seetRepository.updateAvgDurationLogLineChart();

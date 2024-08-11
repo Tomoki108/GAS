@@ -26,7 +26,7 @@ class GithubAPIImpl implements GithubAPI {
     });
     const avgDuration = durationSum / response.total_count;
 
-    return avgDuration;
+    return avgDuration / 1000; // ミリ秒から秒に変換
   }
 
   fetchWorkflowRuns(workflowFile: string, date: Date) {
