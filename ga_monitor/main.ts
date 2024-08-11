@@ -1,9 +1,9 @@
 const workflowFiles = ["publish_preview.yml"];
 
-const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-
-// entry point
+// メインの処理のentry point
 async function main() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
   // シート名のvalidate
   const sheets = spreadsheet.getSheets();
   const sheetNames = sheets.map(function (sheet) {
