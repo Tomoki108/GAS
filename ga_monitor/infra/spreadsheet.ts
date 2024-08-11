@@ -49,28 +49,24 @@ class SheetResoisitoryImpl implements SheetResoisitory {
     var dataRange: GoogleAppsScript.Spreadsheet.Range;
     const lastRow = this.sheet.getLastRow();
     if (lastRow < 30) {
-      dataRange = this.sheet.getRange(
-        1,
-        DATE_COLUMN,
-        lastRow,
-        DURATION_DELTA_COLUMN
-      );
+      dataRange = this.sheet.getRange(1, DATE_COLUMN, lastRow, DURATION_COLUMN);
     } else {
       dataRange = this.sheet.getRange(
         lastRow - 30,
         DATE_COLUMN,
         lastRow,
-        DURATION_DELTA_COLUMN
+        DURATION_COLUMN
       );
     }
 
     // 新しいチャートを作成
+    // https://developers.google.com/apps-script/chart-configuration-options
     var chart = this.sheet
       .newChart()
       .setChartType(Charts.ChartType.LINE)
       .addRange(dataRange)
       .setPosition(5, 5, 0, 0)
-      .setOption("title", "Updated Line Chart")
+      .setOption("title", this.sheet.getName() + " Avg Duration")
       .build();
 
     // シートにチャートを挿入
