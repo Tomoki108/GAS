@@ -6,7 +6,7 @@ type AvgDurationLog = {
 };
 
 //////////////////
-// spread_sheet
+// spread sheet
 //////////////////
 
 interface SheetResoisitory {

@@ -5,3 +5,21 @@ function getFormattedDate(date: Date) {
 
   return `${year}-${month}-${day}`;
 }
+
+function arraysEqualIgnoreOrder<T>(arr1: T[], arr2: T[]): boolean {
+  // 長さが異なる場合は、異なると判定
+  if (arr1.length !== arr2.length) return false;
+
+  // 配列をソートする
+  const sortedArr1 = [...arr1].sort();
+  const sortedArr2 = [...arr2].sort();
+
+  // 各要素を比較する
+  for (let i = 0; i < sortedArr1.length; i++) {
+    if (sortedArr1[i] !== sortedArr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
